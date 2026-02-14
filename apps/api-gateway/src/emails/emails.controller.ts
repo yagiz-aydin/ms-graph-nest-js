@@ -20,7 +20,11 @@ export class EmailsController {
     try {
       const response = await this.emailsService.getEmails(req.session.token!);
       return this.formatterEmails(response.value);
-    } catch {
+    } catch (error) {
+      console.error(
+        'ApiGateway - EmailsController: Error getting emails:',
+        error,
+      );
       throw new InternalServerErrorException('Error getting emails');
     }
   }
