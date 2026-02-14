@@ -6,7 +6,7 @@ export enum Endpoint {
   EMAILS = '/me/messages',
 
   // User
-  USER_ALL = '/me/all',
+  USER_ALL = '/users',
   USER_ME = '/me',
 
   // Search
