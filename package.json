@@ -7,17 +7,23 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
-    "start:dev": "nest start --watch",
-    "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
+    "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
+    "start": "npm run start:all",
+    "start:all": "npm run start:gateway & npm run start:applications & npm run start:emails & npm run start:search & npm run start:user",
+    "start:dev": "nest start --watch api-gateway",
+    "start:debug": "nest start --debug --watch api-gateway",
+    "start:prod": "node dist/apps/api-gateway/main",
+    "start:gateway": "nest start api-gateway",
+    "start:applications": "nest start applications",
+    "start:emails": "nest start emails",
+    "start:search": "nest start search",
+    "start:user": "nest start user",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./apps/ms-search-nest-api/test/jest-e2e.json"
   },
   "dependencies": {
     "@1password/op-js": "^0.1.13",
@@ -26,6 +32,7 @@
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.1",
+    "@nestjs/microservices": "^11.1.13",
     "@nestjs/platform-express": "^11.1.12",
     "@nestjs/swagger": "^11.2.6",
     "@types/express-session": "^1.18.2",
@@ -69,7 +76,7 @@
       "json",
       "ts"
     ],
-    "rootDir": "src",
+    "rootDir": ".",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
@@ -77,10 +84,15 @@
     "collectCoverageFrom": [
       "**/*.(t|j)s"
     ],
-    "coverageDirectory": "../coverage",
+    "coverageDirectory": "./coverage",
     "testEnvironment": "node",
     "moduleNameMapper": {
+      "^@app/shared(|/.*)$": "<rootDir>/libs/shared/src/$1",
       "^src/(.*)$": "<rootDir>/$1"
-    }
+    },
+    "roots": [
+      "<rootDir>/apps/",
+      "<rootDir>/libs/"
+    ]
   }
 }

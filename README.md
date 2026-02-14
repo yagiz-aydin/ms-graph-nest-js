@@ -2,66 +2,93 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+# Microsoft Search NestJS API (Microservices)
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+This project is a refactor of the Microsoft Search API into a **Monorepo** structure using **NestJS Microservices**. It uses an **API Gateway** to handle HTTP requests and routes them to specialized microservices via **TCP**.
 
-## Description
+## Architecture
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+The project is organized as a Monorepo:
 
-## Project setup
+- **apps/api-gateway**: The main entry point (HTTP). Handles authentication and routing.
+- **apps/applications**: Microservice for managing Applications.
+- **apps/emails**: Microservice for managing Emails.
+- **apps/search**: Microservice for Search operations.
+- **apps/user**: Microservice for User profile management.
+- **libs/shared**: Shared library containing DTOs, Types, and Utilities.
+
+## Services & Ports
+
+| Service          | Type | Port     | Description                     |
+| :--------------- | :--- | :------- | :------------------------------ |
+| **API Gateway**  | HTTP | **3000** | Main entry point, Swagger, Auth |
+| **Applications** | TCP  | **3001** | Application logic               |
+| **Emails**       | TCP  | **3002** | Email logic                     |
+| **Search**       | TCP  | **3003** | Search logic                    |
+| **User**         | TCP  | **3004** | User logic                      |
+
+## Prerequisities
+
+1.  **Node.js**: Ensure Node.js is installed.
+2.  **Azure App Registration**: You need a valid `.env` file with Azure AD credentials.
+    ```env
+    AZURE_CLIENT_ID=...
+    AZURE_TENANT_ID=...
+    AZURE_CLIENT_SECRET=...
+    AZURE_REDIRECT_URI=http://localhost:3000/api/auth/callback
+    AZURE_SCOPES=...
+    SESSION_SECRET_KEY=...
+    ```
+
+## Installation
 
 ```bash
 $ npm install
 ```
 
-## Compile and run the project
+## Running the App
+
+### Run All Services (Recommended)
+
+This command starts the API Gateway and all Microservices concurrently.
 
 ```bash
-# development
-$ npm run start
+$ npm run start:all
+```
 
-# watch mode
-$ npm run start:dev
+### Run Individually
 
+You can start services individually in separate terminals:
+
+```bash
+# Gateway (Required)
+$ npm run start:gateway
+
+# Microservices
+$ npm run start:applications
+$ npm run start:emails
+$ npm run start:search
+$ npm run start:user
+```
+
+## API Endpoints (Gateway)
+
+Once running, the API is accessible at `http://localhost:3000/api`.
+
+- **Swagger UI**: `http://localhost:3000/api`
+- **Login**: `http://localhost:3000/api/auth/login`
+- **Logout**: `http://localhost:3000/api/auth/logout`
+- **User Profile**: `http://localhost:3000/api/user`
+- **Applications**: `http://localhost:3000/api/applications`
+- **Emails**: `http://localhost:3000/api/emails`
+- **Search**: `POST http://localhost:3000/api/search`
+
+## Test
+
+```bash
 # unit tests
 $ npm run test
 
 # e2e tests
 $ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-
-# swagger
-$ npm start
-$ localhost:3000/api
-
-# login
-$ localhost:3000/api/auth/user
-
-# logout
-$ localhost:3000/api/auth/logout
-
-# applications
-$ localhost:3000/api/applications
-
-# search
-$ localhost:3000/api/search
 ```
