@@ -1,0 +1,83 @@
+export interface MicrosoftGraphEmail {
+  id: string;
+  createdDateTime: string;
+  lastModifiedDateTime: string;
+  changeKey: string;
+  categories: string[];
+  receivedDateTime: string;
+  sentDateTime: string;
+  hasAttachments: boolean;
+  internetMessageId: string;
+  subject: string;
+  bodyPreview: string;
+  importance: string;
+  parentFolderId: string;
+  conversationId: string;
+  conversationIndex: string;
+  isDeliveryReceiptRequested: boolean | null;
+  isReadReceiptRequested: boolean;
+  isRead: boolean;
+  isDraft: boolean;
+  webLink: string;
+  inferenceClassification: string;
+  body: {
+    contentType: string;
+    content: string;
+  };
+  sender: {
+    emailAddress: {
+      name: string;
+      address: string;
+    };
+  };
+  from: {
+    emailAddress: {
+      name: string;
+      address: string;
+    };
+  };
+  toRecipients: {
+    emailAddress: {
+      name: string;
+      address: string;
+    };
+  }[];
+  ccRecipients: {
+    emailAddress: {
+      name: string;
+      address: string;
+    };
+  }[];
+  bccRecipients: {
+    emailAddress: {
+      name: string;
+      address: string;
+    };
+  }[];
+  replyTo: {
+    emailAddress: {
+      name: string;
+      address: string;
+    };
+  }[];
+  flag: {
+    flagStatus: string;
+  };
+}
+
+export interface MicrosoftGraphEmailResponse {
+  '@odata.context': string;
+  value: MicrosoftGraphEmail[];
+}
+
+export interface EmailFormatted {
+  id: string;
+  subject: string;
+  sender: {
+    name: string;
+    address: string;
+  };
+  receivedDateTime: string;
+  bodyPreview: string;
+  webLink: string;
+}

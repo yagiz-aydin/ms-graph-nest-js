@@ -17,6 +17,11 @@ import { ApplicationsModule } from './applications/applications.module';
 import { SearchModule } from './search/search.module';
 import { SearchController } from './search/search.controller';
 import { SearchService } from './search/search.service';
+
+import { EmailsModule } from './emails/emails.module';
+import { EmailsController } from './emails/emails.controller';
+import { EmailsService } from './emails/emails.service';
+
 import { SwaggerModule } from '@nestjs/swagger';
 
 @Module({
@@ -47,15 +52,24 @@ import { SwaggerModule } from '@nestjs/swagger';
     AuthModule,
     UserModule,
     ApplicationsModule,
+    EmailsModule,
     SearchModule,
+    EmailsModule,
     SwaggerModule,
   ],
   controllers: [
     AuthController,
     UserController,
     ApplicationsController,
+    EmailsController,
     SearchController,
   ],
-  providers: [AuthService, UserService, ApplicationsService, SearchService],
+  providers: [
+    AuthService,
+    UserService,
+    ApplicationsService,
+    EmailsService,
+    SearchService,
+  ],
 })
 export class AppModule {}
