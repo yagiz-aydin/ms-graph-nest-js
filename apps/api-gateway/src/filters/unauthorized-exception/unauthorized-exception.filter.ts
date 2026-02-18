@@ -40,10 +40,6 @@ export class UnauthorizedExceptionFilter implements ExceptionFilter {
   ): boolean {
     const url = new URL(afterLoginRedirectUrl, `http://${req.headers.host}`);
 
-    if (url.hostname !== req.hostname) {
-      return false;
-    }
-
-    return true;
+    return url.hostname === req.hostname;
   }
 }

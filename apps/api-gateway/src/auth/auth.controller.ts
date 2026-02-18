@@ -26,7 +26,7 @@ export class AuthController {
   async logout(@Req() req: Request, @Res() res: Response): Promise<void> {
     await this.authService
       .signOut(req)
-      .then((status) => {
+      .then(status => {
         let message = Message.LOGGED_OUT_SUCCESSFULLY;
 
         if (status === HttpStatus.BAD_REQUEST) {
@@ -59,8 +59,6 @@ export class AuthController {
 
     await this.authService.handleRedirect(req, code);
 
-    // #TODO Optional Usage
-    // const redirectUrl = await this.authService.getAfterLoginRedirect(req);
     const redirectUrl = '/api/v1/user';
 
     this.authService.deleteAfterLoginRedirect(req);

@@ -8,6 +8,9 @@ import { ApplicationsModule } from './applications/applications.module';
 import { EmailsModule } from './emails/emails.module';
 import { SearchModule } from './search/search.module';
 import { SwaggerModule } from '@nestjs/swagger';
+import { LoggerModule } from '@app/shared';
+import { HealthModule } from './health/health.module';
+import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 
 @Module({
   imports: [
@@ -40,6 +43,9 @@ import { SwaggerModule } from '@nestjs/swagger';
     EmailsModule,
     SearchModule,
     SwaggerModule,
+    LoggerModule,
+    HealthModule,
+    PrometheusModule.register(),
   ],
   controllers: [],
   providers: [],

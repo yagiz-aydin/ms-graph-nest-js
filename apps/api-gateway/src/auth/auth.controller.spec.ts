@@ -44,10 +44,10 @@ describe('AuthController', () => {
 
   describe('login', () => {
     it('should redirect to login url', async () => {
-      mockAuthService.signIn.mockResolvedValue('http://login-url');
+      mockAuthService.signIn.mockResolvedValue('https://login-url');
       await controller.login(mockResponse);
       expect(mockAuthService.signIn).toHaveBeenCalled();
-      expect(mockResponse.redirect).toHaveBeenCalledWith('http://login-url');
+      expect(mockResponse.redirect).toHaveBeenCalledWith('https://login-url');
     });
   });
 });

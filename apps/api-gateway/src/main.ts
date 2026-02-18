@@ -1,4 +1,5 @@
 import { NestFactory } from '@nestjs/core';
+import { Logger, LoggerErrorInterceptor } from 'nestjs-pino';
 import '@app/shared'; // Import for side effects (session augmentation)
 import { AppModule } from './app.module';
 import { VersioningType } from '@nestjs/common';
@@ -19,7 +20,9 @@ if (process.env.ONEPASS === 'true') {
 }
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+  app.useLogger(app.get(Logger));
+  app.useGlobalInterceptors(new LoggerErrorInterceptor());
   const config = new DocumentBuilder()
     .setTitle('Microsoft Search NestJS API')
     .setDescription('Microsoft Authentication and Search API')
@@ -61,7 +64,7 @@ async function bootstrap() {
     new InternalServerErrorExceptionFilter(),
   ];
 
-  filters.forEach((filter) => app.useGlobalFilters(filter));
+  filters.forEach(filter => app.useGlobalFilters(filter));
 
   await app.listen(3000);
 }

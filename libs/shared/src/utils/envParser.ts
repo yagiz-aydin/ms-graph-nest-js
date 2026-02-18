@@ -15,7 +15,7 @@ export const parseScopes = (scopesString: string | undefined): string[] => {
     // Split by space or comma, filtering out empty strings and stripping internal quotes
     return cleanString
       .split(/[\s,]+/)
-      .map((s) => s.trim().replace(/^["']|["']$/g, ''))
+      .map(s => s.trim().replace(/^["']|["']$/g, ''))
       .filter(Boolean);
   }
 };

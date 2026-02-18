@@ -81,7 +81,7 @@ export class AuthService {
     return new Promise((resolve, reject) => {
       if (!req.session.token) resolve(HttpStatus.BAD_REQUEST);
 
-      req.session.destroy((err) => {
+      req.session.destroy(err => {
         if (err) {
           reject(new Error('Session destroy failed'));
         }
