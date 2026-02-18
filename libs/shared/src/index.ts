@@ -1,6 +1,7 @@
 export * from './shared.module';
 export * from './shared.service';
 export * from './logger/logger.module';
+export * from './vault/vault.module';
 
 // Utils
 export * from './utils/graphClient';

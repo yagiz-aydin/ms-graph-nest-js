@@ -27,6 +27,40 @@ The project is organized as a Monorepo:
 | **Search**       | TCP  | **3003** | Search logic                    |
 | **User**         | TCP  | **3004** | User logic                      |
 
+## Features
+
+### 1. Logging
+
+- **System**: Uses `nestjs-pino` for high-performance, JSON-structured logging.
+- **Development**: Pretty-printed logs are enabled in non-production environments.
+
+### 2. Monitoring & Health
+
+- **Metrics**: Prometheus metrics are available at `/api/metrics`.
+- **Health Checks**: Health status is available at `/api/health`.
+
+### 3. Docker Support
+
+The project is fully Dockerized with a single multi-stage `Dockerfile`.
+
+**Run with Docker Compose:**
+
+```bash
+docker-compose up -d --build
+```
+
+**Build Specific Service:**
+
+```bash
+docker build --build-arg APP_NAME=api-gateway -t api-gateway .
+```
+
+### 4. Vault Integration
+
+- **Service**: HashiCorp Vault is integrated for secret management.
+- **Config**: Secrets are loaded at startup and merged with environment variables.
+- **Local Dev**: A Vault container is provided in `docker-compose.yml` (Port 8200).
+
 ## Prerequisities
 
 1.  **Node.js**: Ensure Node.js is installed.

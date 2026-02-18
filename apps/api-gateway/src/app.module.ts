@@ -11,12 +11,15 @@ import { SwaggerModule } from '@nestjs/swagger';
 import { LoggerModule } from '@app/shared';
 import { HealthModule } from './health/health.module';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
+import loadVaultConfig from '@app/shared/vault/vault.config';
+import { VaultModule } from '@app/shared';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: ['.env.development.local', '.env'],
       isGlobal: true,
+      load: [loadVaultConfig],
       validationSchema: Joi.object({
         // Environment
         NODE_ENV: Joi.string()
@@ -44,6 +47,7 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
     SearchModule,
     SwaggerModule,
     LoggerModule,
+    VaultModule,
     HealthModule,
     PrometheusModule.register(),
   ],
