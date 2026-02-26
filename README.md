@@ -2,7 +2,7 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
 
-# Microsoft Search NestJS API (Microservices)
+# Microsoft Graph API & Search Microservice
 
 This project is a refactor of the Microsoft Search API into a **Monorepo** structure using **NestJS Microservices**. It uses an **API Gateway** to handle HTTP requests and routes them to specialized microservices via **TCP**.
 
