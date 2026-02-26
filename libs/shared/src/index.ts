@@ -5,11 +5,13 @@ export * from './vault/vault.module';
 
 // Utils
 export * from './utils/graphClient';
+export * from './utils/graphClient.service';
 export * from './utils/envParser';
 
 // Types
 export * from './types/endpoint';
 export * from './types/message';
+export * from './types/messagePatterns';
 export * from './types/session';
 
 // DTOs

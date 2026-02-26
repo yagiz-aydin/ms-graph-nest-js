@@ -40,17 +40,15 @@ describe('ApplicationsController', () => {
         },
       } as unknown as Request;
 
-      const mockResponse = {
-        value: [
-          {
-            displayName: 'App 1',
-            appId: '123',
-            createdDateTime: '2023-01-01',
-            signInAudience: 'AzureADMyOrg',
-            publisherDomain: 'example.com',
-          },
-        ],
-      };
+      const mockResponse = [
+        {
+          displayName: 'App 1',
+          appId: '123',
+          createdDateTime: '2023-01-01',
+          signInAudience: 'AzureADMyOrg',
+          publisherDomain: 'example.com',
+        },
+      ];
 
       mockApplicationsService.getApplications.mockResolvedValue(mockResponse);
 

@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable, Logger } from '@nestjs/common';
 import {
   ConfidentialClientApplication,
   Configuration,
@@ -10,6 +10,7 @@ import { parseScopes } from '@app/shared';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
   private msalClient: ConfidentialClientApplication;
 
   constructor(
@@ -39,6 +40,7 @@ export class AuthService {
   }
 
   async signIn(): Promise<string> {
+    this.logger.log('Initiating sign-in flow');
     const scopesString = this.configService.get<string>('AZURE_SCOPES');
     const scopes = parseScopes(scopesString);
 
@@ -56,6 +58,7 @@ export class AuthService {
     req: Request,
     code: string,
   ): Promise<AuthenticationResult> {
+    this.logger.log('Handling redirect from Azure AD');
     const scopesString = this.configService.get<string>('AZURE_SCOPES');
     const scopes = parseScopes(scopesString);
 
@@ -70,19 +73,26 @@ export class AuthService {
     const response = await this.msalClient.acquireTokenByCode(tokenRequest);
 
     req.session.token = response.accessToken;
-    if (response.account)
-      console.log(response.account.username + ' sign in successful.');
-    else console.log('Unknown User sign in successful.');
+    if (response.account) {
+      this.logger.log(`${response.account.username} sign-in successful.`);
+    } else {
+      this.logger.log('Unknown User sign-in successful.');
+    }
 
     return response;
   }
 
   async signOut(req: Request): Promise<HttpStatus> {
+    this.logger.log('Initiating sign-out flow');
     return new Promise((resolve, reject) => {
-      if (!req.session.token) resolve(HttpStatus.BAD_REQUEST);
+      if (!req.session.token) {
+        this.logger.warn('Sign-out requested but no token found in session.');
+        resolve(HttpStatus.BAD_REQUEST);
+      }
 
       req.session.destroy(err => {
         if (err) {
+          this.logger.error('Session destroy failed', err);
           reject(new Error('Session destroy failed'));
         }
       });

@@ -4,44 +4,28 @@ import {
   InternalServerErrorException,
   Req,
   UseGuards,
+  Logger,
 } from '@nestjs/common';
 import { EmailsService } from './emails.service';
 import { AuthGuard } from '../auth/auth.guard';
 import type { Request } from 'express';
-import { EmailFormatted, MicrosoftGraphEmail } from '@app/shared';
+import { EmailFormatted } from '@app/shared';
 
 @Controller('emails')
 export class EmailsController {
-  constructor(private emailsService: EmailsService) {}
+  private readonly logger = new Logger(EmailsController.name);
+
+  constructor(private readonly emailsService: EmailsService) {}
 
   @Get()
   @UseGuards(AuthGuard)
   async getEmails(@Req() req: Request): Promise<EmailFormatted[]> {
     try {
-      const response = await this.emailsService.getEmails(req.session.token!);
-      return this.formatterEmails(response.value);
+      this.logger.log('Fetching emails for user request');
+      return await this.emailsService.getEmails(req.session.token!);
     } catch (error) {
-      console.error(
-        'ApiGateway - EmailsController: Error getting emails:',
-        error,
-      );
+      this.logger.error(`Error getting emails: ${error.message}`, error.stack);
       throw new InternalServerErrorException('Error getting emails');
     }
-  }
-
-  formatterEmails(emails: MicrosoftGraphEmail[]): EmailFormatted[] {
-    return emails.map((email: MicrosoftGraphEmail) => {
-      return {
-        id: email.id,
-        subject: email.subject,
-        sender: {
-          name: email.sender.emailAddress.name,
-          address: email.sender.emailAddress.address,
-        },
-        receivedDateTime: email.receivedDateTime,
-        bodyPreview: email.bodyPreview,
-        webLink: email.webLink,
-      };
-    });
   }
 }

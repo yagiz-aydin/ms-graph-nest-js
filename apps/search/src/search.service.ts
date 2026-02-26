@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import {
-  getGraphClient,
+  GraphClientService,
   EntityType,
   SearchQueryRequest,
   SearchResponse,
@@ -9,24 +9,40 @@ import {
 
 @Injectable()
 export class SearchService {
+  private readonly logger = new Logger(SearchService.name);
+
+  constructor(private readonly graphClientService: GraphClientService) {}
+
   async search(
     query: string,
     entityTypes: EntityType[],
     accessToken: string,
   ): Promise<SearchResponse> {
-    const client = getGraphClient(accessToken);
-    const requestBody: SearchQueryRequest = {
-      requests: [
-        {
-          entityTypes: entityTypes,
-          query: {
-            queryString: query,
+    this.logger.log(`Executing search for query: ${query}`);
+    try {
+      const client = this.graphClientService.getClient(accessToken);
+      const requestBody: SearchQueryRequest = {
+        requests: [
+          {
+            entityTypes: entityTypes,
+            query: {
+              queryString: query,
+            },
           },
-        },
-      ],
-    };
-    return client
-      .api(Endpoint.SEARCH_QUERY)
-      .post(requestBody) as Promise<SearchResponse>;
+        ],
+      };
+      const response = await client
+        .api(Endpoint.SEARCH_QUERY)
+        .post(requestBody);
+
+      this.logger.log('Successfully completed search query');
+      return response as SearchResponse;
+    } catch (error) {
+      this.logger.error(
+        `Error executing search: ${error.message}`,
+        error.stack,
+      );
+      throw error;
+    }
   }
 }

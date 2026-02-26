@@ -1,19 +1,35 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import {
-  getGraphClient,
+  GraphClientService,
   MicrosoftGraphApplicationResponse,
   Endpoint,
 } from '@app/shared';
 
 @Injectable()
 export class ApplicationsService {
+  private readonly logger = new Logger(ApplicationsService.name);
+
+  constructor(private readonly graphClientService: GraphClientService) {}
+
   async getApplications(
     accessToken: string,
   ): Promise<MicrosoftGraphApplicationResponse> {
-    const client = getGraphClient(accessToken);
-    return client
-      .api(Endpoint.APPLICATIONS)
-      .header('ConsistencyLevel', 'eventual')
-      .get() as Promise<MicrosoftGraphApplicationResponse>;
+    this.logger.log(`Getting applications from Microsoft Graph API`);
+    try {
+      const client = this.graphClientService.getClient(accessToken);
+      const response = await client
+        .api(Endpoint.APPLICATIONS)
+        .header('ConsistencyLevel', 'eventual')
+        .get();
+
+      this.logger.log('Successfully fetched applications');
+      return response as MicrosoftGraphApplicationResponse;
+    } catch (error) {
+      this.logger.error(
+        `Error fetching applications: ${error.message}`,
+        error.stack,
+      );
+      throw error;
+    }
   }
 }

@@ -1,5 +1,4 @@
 import { Injectable, Logger } from '@nestjs/common';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const NodeVault = require('node-vault');
 
 @Injectable()

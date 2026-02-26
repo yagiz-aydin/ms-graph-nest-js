@@ -1,29 +1,30 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import {
-  getGraphClient,
+  GraphClientService,
   MicrosoftGraphEmailResponse,
   Endpoint,
 } from '@app/shared';
 
 @Injectable()
 export class EmailsService {
+  private readonly logger = new Logger(EmailsService.name);
+
+  constructor(private readonly graphClientService: GraphClientService) {}
+
   async getEmails(accessToken: string): Promise<MicrosoftGraphEmailResponse> {
-    console.log(
-      'EmailsService: Getting emails with token length:',
-      accessToken?.length,
-    );
+    this.logger.log(`Getting emails with token length: ${accessToken?.length}`);
     try {
-      const client = getGraphClient(accessToken);
+      const client = this.graphClientService.getClient(accessToken);
       const response = await client
         .api(Endpoint.EMAILS)
         .header('ConsistencyLevel', 'eventual')
         .get();
 
       const result = response as MicrosoftGraphEmailResponse;
-      console.log('EmailsService: Successfully fetched emails');
+      this.logger.log('Successfully fetched emails from Microsoft Graph API');
       return result;
     } catch (error) {
-      console.error('EmailsService: Error fetching emails:', error);
+      this.logger.error(`Error fetching emails: ${error.message}`, error.stack);
       throw error;
     }
   }

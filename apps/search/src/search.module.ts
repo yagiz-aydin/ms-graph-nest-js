@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { SearchController } from './search.controller';
 import { SearchService } from './search.service';
+import { SharedModule } from '@app/shared';
 
 @Module({
-  imports: [],
+  imports: [SharedModule],
   controllers: [SearchController],
   providers: [SearchService],
 })
