@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-const NodeVault = require('node-vault');
+import NodeVault from 'node-vault';
 
 @Injectable()
 export class VaultService {

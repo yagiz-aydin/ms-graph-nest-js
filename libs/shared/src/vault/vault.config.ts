@@ -1,4 +1,4 @@
-const NodeVault = require('node-vault');
+import NodeVault from 'node-vault';
 
 export default async () => {
   const vault = NodeVault({
@@ -8,7 +8,8 @@ export default async () => {
   });
 
   try {
-    const list = await vault.list('secret/metadata');
+    // Get Vault informations
+    // const list = await vault.list('secret/metadata');
     // For demo purposes, we will try to read a specific secret path
     // In production, this path should be dynamic or configured via env
     const secretPath = 'secret/data/ms-graph-nest-js/development';
